@@ -16,10 +16,10 @@ pipeline {
         echo " After build for branch: ${params.BRANCH_NM}"
 			}
 		}
-/*		stage ('Docker Image') {
+		stage ('Docker Image') {
 			steps{
 				script {
-					bat 'docker build -t angular-conduit:V1.0 .'
+					bat 'docker build -t angular-hello-world:V1.0 .'
 				}
 			}
 			post {
@@ -30,7 +30,7 @@ pipeline {
 					echo 'Docker Image built failed'
 				}
 			}
-		}*/
+		}
 	}
 	post {
     always {
