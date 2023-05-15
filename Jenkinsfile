@@ -9,7 +9,7 @@ pipeline {
 	environment {
 		git_cred = "git-cred"
 		aws_cred = "AWS_S3_ADMIN"
-		project_url = 'https://github.com/kotagiriramachandra/Angular-app.git'
+		project_url = "https://github.com/kotagiriramachandra/Helloworld.git"
 		bucket_name = "krc-s3"
 		region = "ap-northeast-1"
 		file_name = "angular-conduit:V1.0"
