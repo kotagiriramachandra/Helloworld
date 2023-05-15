@@ -7,7 +7,7 @@ pipeline {
 		string defaultValue: 'develop', description: 'Source Branch', name: 'BRANCH_NM'
 	}
 	environment {
-		git-cred = "git-cred"
+		git_cred = "git-cred"
 		aws_cred = "AWS_S3_ADMIN"
 		project_url = 'https://github.com/kotagiriramachandra/Angular-app.git'
 		bucket_name = "krc-s3"
@@ -18,7 +18,7 @@ pipeline {
 		stage ('build') {
 			steps {
 				echo " Before build for branch: ${params.BRANCH_NM}"
-        checkout scmGit(branches: [[name: "*/${params.BRANCH_NM}"]], extensions: [], userRemoteConfigs: [[credentialsId: "${git-cred}", name: 'origin', url: '${project_url}']])
+        checkout scmGit(branches: [[name: "*/${params.BRANCH_NM}"]], extensions: [], userRemoteConfigs: [[credentialsId: "${env.git_cred}", name: 'origin', url: "${env.project_url}"]])
 				bat 'npm install'
 				bat 'npm run build'        
         echo " After build for branch: ${params.BRANCH_NM}"
@@ -27,7 +27,7 @@ pipeline {
 		stage ('Docker Image') {
 			steps{
 				script {
-					bat "docker build -t ${file_name} ."
+					bat "docker build -t ${env.file_name} ."
 				}
 			}
 			post {
@@ -42,9 +42,9 @@ pipeline {
 /*		stage ('Push to AWS') {
       steps{
         script {
-				  withAWS(region:"${region}",credentials:"${aws_cred}")
+				  withAWS(region:"${env.region}",credentials:"${env.aws_cred}")
 					{
-					  s3Upload(file:"${file_name}",bucket:"${bucket_name}",path:'')
+					  s3Upload(file:"${env.file_name}",bucket:"${env.bucket_name}",path:'')
 					}
 				}
       }
