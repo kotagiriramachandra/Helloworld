@@ -39,7 +39,7 @@ pipeline {
 				}
 			}
 		}
-/*		stage ('Push to AWS') {
+		stage ('Push to AWS') {
       steps{
         script {
 				  withAWS(region:"${env.region}",credentials:"${env.aws_cred}")
@@ -56,7 +56,7 @@ pipeline {
           echo 'Docker AWS upload failed'
         }
       }  
-    }*/
+    }
 	}
 	post {
     always {
