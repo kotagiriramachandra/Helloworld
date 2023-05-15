@@ -41,7 +41,7 @@ pipeline {
 		}
 		stage ('Push to AWS') {
       steps{
-        withAWS(region:"${env.region}",credentials:"${env.aws_cred}")
+        withAWS(region:"${env.region}",credentials:"${env.aws_cred}")\
 					{
 					  s3Upload(file:"${env.file_name}",bucket:"${env.bucket_name}",path:'')
 					}
