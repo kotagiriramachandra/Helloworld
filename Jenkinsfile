@@ -60,7 +60,7 @@ pipeline {
 		stage ('Push to Docker Hub') {
       steps{
 				script {
-          bat "sudo docker push ${env.DOCKER_TAG}"
+          bat "echo sudo docker push ${env.DOCKER_TAG}"
 				}
       }
       post {
