@@ -31,6 +31,21 @@ pipeline {
         }
       }  
     }
+		stage ('Push to Docker Hub') {
+      steps{
+				script {
+          bat "docker push "
+				}
+      }
+      post {
+        success {
+          echo 'Push to Docker Hub successfully'
+        }
+        failure {
+          echo 'Push to Docker Hub failed'
+        }
+      }  
+    }*/
 	}
 	post {
     always {
