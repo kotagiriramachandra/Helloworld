@@ -14,7 +14,7 @@ pipeline {
 		BUCKET_NAME = "krc-s3"
 		REGION = "ap-northeast-1"
 		FILE_NAME = "angular-hello-world:V1.0"
-    ACCOUNT_NAME = "kotagiriramachandra"
+    ACCOUNT_NAME = "kotagiriramachandra/hello-world"
 	}
 	stages {
 		stage ('build') {
