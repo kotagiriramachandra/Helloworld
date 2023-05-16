@@ -16,6 +16,30 @@ pipeline {
 		FILE_NAME = "angular-conduit:V1.0"
 	}
 	stages {
+		stage ('build') {
+			steps {
+				echo " Before build for branch: ${params.BRANCH_NM}"
+        checkout scmGit(branches: [[name: "*/${params.BRANCH_NM}"]], extensions: [], userRemoteConfigs: [[credentialsId: "${env.GIT_CRED}", name: 'origin', url: "${env.PROJECT_URL}"]])
+				bat 'npm install'
+				bat 'npm run build'        
+        echo " After build for branch: ${params.BRANCH_NM}"
+			}
+		}
+		stage ('Docker Image') {
+			steps{
+				script {
+					bat "docker build -t ${env.FILE_NAME} ."
+				}
+			}
+			post {
+				success {
+					echo 'Docker Image is built successfully'
+				}
+				failure {
+					echo 'Docker Image built failed'
+				}
+			}
+		}
     stage ('Docker hub connect') {
       steps{
 				script {
@@ -34,7 +58,7 @@ pipeline {
 		stage ('Push to Docker Hub') {
       steps{
 				script {
-          bat "docker push "
+          bat "docker push ${env.FILE_NAME}"
 				}
       }
       post {
@@ -45,7 +69,7 @@ pipeline {
           echo 'Push to Docker Hub failed'
         }
       }  
-    }*/
+    }
 	}
 	post {
     always {
