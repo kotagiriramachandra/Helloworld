@@ -14,6 +14,7 @@ pipeline {
 		BUCKET_NAME = "krc-s3"
 		REGION = "ap-northeast-1"
 		FILE_NAME = "angular-hello-world:V1.0"
+    ACCOUNT_NAME = "kotagiriramachandra"
 	}
 	stages {
 		stage ('build') {
@@ -58,7 +59,8 @@ pipeline {
 		stage ('Push to Docker Hub') {
       steps{
 				script {
-          bat "docker push ${env.FILE_NAME}"
+          bat "docker tag ${env.FILE_NAME} ${ACCOUNT_NAME}/${env.FILE_NAME}"
+          bat "docker push ${ACCOUNT_NAME}/${env.FILE_NAME}"
 				}
       }
       post {
