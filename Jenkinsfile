@@ -14,7 +14,7 @@ pipeline {
 		BUCKET_NAME = "krc-s3"
 		REGION = "ap-northeast-1"
 		FILE_NAME = "angular-hello-world:V1.0"
-    ACCOUNT_NAME = "kotagiriramachandra/hello-world"
+    ACCOUNT_NAME = "kotagiriramachandra"
 	}
 	stages {
 		stage ('build') {
@@ -29,7 +29,7 @@ pipeline {
 		stage ('Docker Image') {
 			steps{
 				script {
-					bat "docker build -t ${env.FILE_NAME} ."
+					bat "docker build -t ${env.ACCOUNT_NAME}/${env.FILE_NAME} ."
 				}
 			}
 			post {
@@ -59,8 +59,7 @@ pipeline {
 		stage ('Push to Docker Hub') {
       steps{
 				script {
-          bat "docker tag ${env.FILE_NAME} ${ACCOUNT_NAME}/${env.FILE_NAME}"
-          bat "docker push ${ACCOUNT_NAME}/${env.FILE_NAME}"
+          bat "docker push ${env.ACCOUNT_NAME}/${env.FILE_NAME}"
 				}
       }
       post {
