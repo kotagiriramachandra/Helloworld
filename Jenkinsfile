@@ -43,7 +43,7 @@ pipeline {
     stage ('Docker hub connect') {
       steps{
 				script {
-          bat "echo ${env.DOCKER_HUB_CRED_PSW} | docker login -u ${env.DOCKER_HUB_CRED_USR} --password-stdin"
+          bat "echo $DOCKER_HUB_CRED_PSW | docker login -u $DOCKER_HUB_CRED_USR --password-stdin"
 				}
       }
       post {
