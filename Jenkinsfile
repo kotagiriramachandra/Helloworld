@@ -7,18 +7,19 @@ pipeline {
 		string defaultValue: 'develop', description: 'Source Branch', name: 'BRANCH_NM'
 	}
 	environment {
-		git_cred = "git-cred"
-		aws_cred = "AWS_S3_ADMIN"
-		project_url = "https://github.com/kotagiriramachandra/Helloworld.git"
-		bucket_name = "krc-s3"
-		region = "ap-northeast-1"
-		file_name = "angular-conduit:V1.0"
+		GIT_CRED = "git-cred"
+		AWS_CRED = "AWS_S3_ADMIN"
+    DOCKER_HUB_CRED = credentials('DOCKER_HUB_CRED')
+		PROJECT_URL = "https://github.com/kotagiriramachandra/Helloworld.git"
+		BUCKET_NAME = "krc-s3"
+		REGION = "ap-northeast-1"
+		FILE_NAME = "angular-conduit:V1.0"
 	}
 	stages {
 		stage ('build') {
 			steps {
 				echo " Before build for branch: ${params.BRANCH_NM}"
-        checkout scmGit(branches: [[name: "*/${params.BRANCH_NM}"]], extensions: [], userRemoteConfigs: [[credentialsId: "${env.git_cred}", name: 'origin', url: "${env.project_url}"]])
+        checkout scmGit(branches: [[name: "*/${params.BRANCH_NM}"]], extensions: [], userRemoteConfigs: [[credentialsId: "${env.GIT_CRED}", name: 'origin', url: "${env.PROJECT_URL}"]])
 				bat 'npm install'
 				bat 'npm run build'        
         echo " After build for branch: ${params.BRANCH_NM}"
@@ -27,7 +28,7 @@ pipeline {
 		stage ('Docker Image') {
 			steps{
 				script {
-					bat "docker build -t ${env.file_name} ."
+					bat "docker build -t ${env.FILE_NAME} ."
 				}
 			}
 			post {
@@ -39,7 +40,22 @@ pipeline {
 				}
 			}
 		}
-		stage ('Push to AWS') {
+    stage ('Docker hub connect') {
+      steps{
+				script {
+          bat "echo ${env.DOCKER_HUB_CRED_PSW} | docker login -u ${env.DOCKER_HUB_CRED_USR} --password-stdin'"
+				}
+      }
+      post {
+        success {
+          echo 'Docker AWS upload successfully'
+        }
+        failure {
+          echo 'Docker AWS upload failed'
+        }
+      }  
+    }
+/*		stage ('Push to AWS') {
       steps{
         withAWS(region:"${env.region}",credentials:"${env.aws_cred}")\
 					{
@@ -54,7 +70,7 @@ pipeline {
           echo 'Docker AWS upload failed'
         }
       }  
-    }
+    }*/
 	}
 	post {
     always {
