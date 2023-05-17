@@ -45,8 +45,7 @@ pipeline {
     stage ('Docker hub connect') {
       steps{
 				script {
-/*          bat "docker login -u ${env.DOCKER_HUB_CRED_USR} -p ${env.DOCKER_HUB_CRED_PSW} docker.io"*/
-          bat "docker login -u ${env.DOCKER_HUB_CRED_USR} --password-stdin | ${env.DOCKER_HUB_CRED_PSW}"
+          bat "docker login -u ${env.DOCKER_HUB_CRED_USR} -p ${env.DOCKER_HUB_CRED_PSW} docker.io"
 				}
       }
       post {
@@ -61,7 +60,7 @@ pipeline {
 		stage ('Push to Docker Hub') {
       steps{
 				script {
-          bat "echo sudo docker push ${env.DOCKER_TAG}"
+          bat "docker push ${env.DOCKER_TAG}"
 				}
       }
       post {
