@@ -49,7 +49,7 @@ pipeline {
 		stage ('AWS S3 Upload') {
 			steps{
         withAWS(region:"${env.region}",credentials:"${env.aws_cred}"){
-          s3Upload(file:"${env.FILE_NAME}.tar.gz",bucket:"${env.bucket_name}",path:'')
+          s3Upload(file:"${env.TAG_NAME}/${env.FILE_NAME}.tar.gz",bucket:"${env.bucket_name}",path:'')
         }
         echo 'AWS S3 upload done successfully'
 			}
