@@ -17,7 +17,7 @@ pipeline {
     DOCKER_TAG = "kotagiriramachandra/hello-world:firsttry"
 	}
 	stages {
-		stage ('build') {
+		stage ('Build Process') {
 			steps {
 				echo " Before build for branch: ${params.BRANCH_NM}"
         checkout scmGit(branches: [[name: "*/${params.BRANCH_NM}"]], extensions: [], userRemoteConfigs: [[credentialsId: "${env.GIT_CRED}", name: 'origin', url: "${env.PROJECT_URL}"]])
@@ -26,7 +26,7 @@ pipeline {
         echo " After build for branch: ${params.BRANCH_NM}"
 			}
 		}
-		stage ('Docker Image') {
+		stage ('Docker Process') {
 			steps{
 				script {
 					bat "docker build -t ${env.FILE_NAME} ."
@@ -46,19 +46,16 @@ pipeline {
 		}
 		stage ('AWS Connect') {
 			steps{
-				script {
-					bat "docker build -t ${env.FILE_NAME} ."
-          bat "docker tag ${env.FILE_NAME} ${env.DOCKER_TAG}"
-          bat "docker login -u ${env.DOCKER_HUB_CRED_USR} -p ${env.DOCKER_HUB_CRED_PSW} docker.io"
-          bat "docker push ${env.DOCKER_TAG}"
-				}
+        withAWS(region:"${env.region}",credentials:"${env.aws_cred}"){
+          s3Upload(file:"${env.DOCKER_TAG}",bucket:"${env.bucket_name}",path:'')
+        }
 			}
 			post {
 				success {
-					echo 'Docker Image processed and pushed successfully'
+					echo 'AWS upload is successful'
 				}
 				failure {
-					echo 'Docker Image process failed'
+					echo 'AWS upload failed'
 				}
 			}
 		}
