@@ -30,7 +30,7 @@ pipeline {
 			steps{
 				script {
 					bat "docker build -t ${env.FILE_NAME} ."
-          bat "docker tag ${env.FILE_NAME} ${env.DOCKER_TAG}"
+/*          bat "docker tag ${env.FILE_NAME} ${env.DOCKER_TAG}"*/
 				}
 			}
 			post {
@@ -60,7 +60,8 @@ pipeline {
 		stage ('Push to Docker Hub') {
       steps{
 				script {
-          bat "docker push ${env.DOCKER_TAG}"
+          bat "docker push ${env.FILE_NAME}"
+/*          bat "docker push ${env.DOCKER_TAG}"*/
 				}
       }
       post {
