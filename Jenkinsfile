@@ -42,7 +42,7 @@ pipeline {
 			steps{
         bat "mkdir ${env.TAG_NAME}"
         dir("${env.TAG_NAME}"){
-          bat "docker save ${env.FILE_NAME}:latest > ${env.FILE_NAME}-${env.TAG_NAME}.tar.gz"
+          bat "docker save ${env.FILE_NAME}:latest > ${env.FILE_NAME}.tar.gz"
         }
         echo 'ZIP done successfully'
 			}
