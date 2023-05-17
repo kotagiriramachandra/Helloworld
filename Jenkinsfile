@@ -14,8 +14,7 @@ pipeline {
 		BUCKET_NAME = "krc-s3"
 		REGION = "ap-northeast-1"
 		FILE_NAME = "angular-hello-world"
-    DOCKER_TAG = "kotagiriramachandra"
-/*    DOCKER_TAG = "kotagiriramachandra/hello-world:firsttry"*/
+    DOCKER_TAG = "kotagiriramachandra/hello-world:firsttry"
 	}
 	stages {
 		stage ('build') {
@@ -31,50 +30,20 @@ pipeline {
 			steps{
 				script {
 					bat "docker build -t ${env.FILE_NAME} ."
-          bat "docker tag ${env.FILE_NAME} ${env.DOCKER_TAG}/${env.FILE_NAME}"
-/*          bat "docker tag ${env.FILE_NAME} ${env.DOCKER_TAG}"*/
+          bat "docker tag ${env.FILE_NAME} ${env.DOCKER_TAG}"
+          bat "docker login -u ${env.DOCKER_HUB_CRED_USR} -p ${env.DOCKER_HUB_CRED_PSW} docker.io"
+          bat "docker push ${env.DOCKER_TAG}"
 				}
 			}
 			post {
 				success {
-					echo 'Docker Image is built successfully'
+					echo 'Docker Image processed and pushed successfully'
 				}
 				failure {
-					echo 'Docker Image built failed'
+					echo 'Docker Image process failed'
 				}
 			}
 		}
-    stage ('Docker hub connect') {
-      steps{
-				script {
-          bat "docker login -u ${env.DOCKER_HUB_CRED_USR} -p ${env.DOCKER_HUB_CRED_PSW} docker.io"
-				}
-      }
-      post {
-        success {
-          echo 'Docker AWS connect successfully'
-        }
-        failure {
-          echo 'Docker AWS connect failed'
-        }
-      }  
-    }
-		stage ('Push to Docker Hub') {
-      steps{
-				script {
-          bat "docker push ${env.DOCKER_TAG}/${env.FILE_NAME}"
-/*          bat "docker push ${env.DOCKER_TAG}"*/
-				}
-      }
-      post {
-        success {
-          echo 'Push to Docker Hub successfully'
-        }
-        failure {
-          echo 'Push to Docker Hub failed'
-        }
-      }  
-    }
 	}
 	post {
     always {
