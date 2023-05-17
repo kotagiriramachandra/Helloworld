@@ -40,7 +40,6 @@ pipeline {
 		}
 		stage ('ZIP Process') {
 			steps{
-        bat "mkdir ${env.TAG_NAME}"
         dir("${env.TAG_NAME}"){
           bat "docker save ${env.FILE_NAME}:latest > ${env.FILE_NAME}.tar.gz"
         }
