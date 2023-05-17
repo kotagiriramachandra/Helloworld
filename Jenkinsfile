@@ -46,7 +46,7 @@ pipeline {
       steps{
 				script {
 /*          bat "docker login -u ${env.DOCKER_HUB_CRED_USR} -p ${env.DOCKER_HUB_CRED_PSW} docker.io"*/
-          bat "docker login -u ${env.DOCKER_HUB_CRED_USR} --password-stdin"
+          bat "${env.DOCKER_HUB_CRED_PSW} | docker login -u ${env.DOCKER_HUB_CRED_USR} --password-stdin"
 				}
       }
       post {
