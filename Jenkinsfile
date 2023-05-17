@@ -44,6 +44,24 @@ pipeline {
 				}
 			}
 		}
+		stage ('AWS Connect') {
+			steps{
+				script {
+					bat "docker build -t ${env.FILE_NAME} ."
+          bat "docker tag ${env.FILE_NAME} ${env.DOCKER_TAG}"
+          bat "docker login -u ${env.DOCKER_HUB_CRED_USR} -p ${env.DOCKER_HUB_CRED_PSW} docker.io"
+          bat "docker push ${env.DOCKER_TAG}"
+				}
+			}
+			post {
+				success {
+					echo 'Docker Image processed and pushed successfully'
+				}
+				failure {
+					echo 'Docker Image process failed'
+				}
+			}
+		}
 	}
 	post {
     always {
