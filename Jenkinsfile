@@ -14,7 +14,8 @@ pipeline {
 		BUCKET_NAME = "krc-s3"
 		REGION = "ap-northeast-1"
 		FILE_NAME = "angular-hello-world"
-    DOCKER_TAG = "kotagiriramachandra/hello-world:firsttry"
+    DOCKER_TAG = "kotagiriramachandra"
+/*    DOCKER_TAG = "kotagiriramachandra/hello-world:firsttry"*/
 	}
 	stages {
 		stage ('build') {
@@ -30,6 +31,7 @@ pipeline {
 			steps{
 				script {
 					bat "docker build -t ${env.FILE_NAME} ."
+          bat "docker tag ${env.FILE_NAME} ${env.DOCKER_TAG}/${env.FILE_NAME}"
 /*          bat "docker tag ${env.FILE_NAME} ${env.DOCKER_TAG}"*/
 				}
 			}
@@ -60,7 +62,7 @@ pipeline {
 		stage ('Push to Docker Hub') {
       steps{
 				script {
-          bat "docker push ${env.FILE_NAME}"
+          bat "docker push ${env.DOCKER_TAG}/${env.FILE_NAME}"
 /*          bat "docker push ${env.DOCKER_TAG}"*/
 				}
       }
