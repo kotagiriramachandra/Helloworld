@@ -14,6 +14,7 @@ pipeline {
 		BUCKET_NAME = "krc-s3"
 		REGION = "ap-northeast-1"
 		FILE_NAME = "angular-hello-world"
+    TAG_NAME = "helloworld"
     DOCKER_TAG = "kotagiriramachandra/hello-world:firsttry"
 	}
 	stages {
@@ -34,21 +35,16 @@ pipeline {
           bat "docker login -u ${env.DOCKER_HUB_CRED_USR} -p ${env.DOCKER_HUB_CRED_PSW} docker.io"
           bat "docker push ${env.DOCKER_TAG}"
 				}
-			}
-			post {
-				success {
-					echo 'Docker Image processed and pushed successfully'
-				}
-				failure {
-					echo 'Docker Image process failed'
-				}
+        echo 'Docker Image processed and pushed successfully'
 			}
 		}
-		stage ('AWS Connect') {
+		stage ('ZIP Process') {
 			steps{
-        withAWS(region:"${env.region}",credentials:"${env.aws_cred}"){
-          s3Upload(file:"${env.FILE_NAME}",bucket:"${env.bucket_name}",path:'')
+        bat "mkdir ${env.TAG_NAME}"
+        dir("${env.TAG_NAME}"){
+          bat "docker save ${env.FILE_NAME}:latest > ${env.FILE_NAME}-${env.TAG_NAME}.tar.gz"
         }
+        echo 'ZIP done successfully'
 			}
 			post {
 				success {
