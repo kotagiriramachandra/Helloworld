@@ -47,7 +47,7 @@ pipeline {
 		stage ('AWS Connect') {
 			steps{
         withAWS(region:"${env.region}",credentials:"${env.aws_cred}"){
-          s3Upload(file:"${env.DOCKER_TAG}",bucket:"${env.bucket_name}",path:'')
+          s3Upload(file:"${env.FILE_NAME}",bucket:"${env.bucket_name}",path:'')
         }
 			}
 			post {
